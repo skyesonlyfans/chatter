@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatterBox v6 - Secure P2P Chat</title>
+    <title>ChatterBox v6 - Professional P2P</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }a
         
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #141414;
-            --bg-tertiary: #1e1e1e;
-            --accent: #5b7cff;
-            --accent-hover: #4a67e8;
-            --text-primary: #ffffff;
+            --bg-primary: #0f1115;
+            --bg-secondary: #161920;
+            --bg-tertiary: #1e232d;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-primary: #f3f4f6;
             --text-secondary: #9ca3af;
-            --border: rgba(255, 255, 255, 0.08);
-            --success: #22c55e;
+            --border: #2d3440;
+            --success: #10b981;
             --error: #ef4444;
-            --warning: #f59e0b;
-            --incoming-msg: #1f1f1f;
-            --outgoing-msg: #5b7cff;
+            --incoming-msg: #262a36;
+            --outgoing-msg: #3b82f6;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             height: 100vh;
@@ -39,54 +38,52 @@
         .header {
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
-            padding: 0.75rem 1.5rem;
+            padding: 0 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 64px;
             z-index: 20;
-            height: 60px;
         }
 
-        .logo-container { display: flex; align-items: center; gap: 0.75rem; }
+        .logo-container { display: flex; align-items: center; gap: 1rem; }
         
         .menu-btn {
             display: none;
             background: none;
             border: none;
             color: var(--text-primary);
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             cursor: pointer;
         }
 
-        .logo { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; }
+        .logo { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; display: flex; align-items: center; }
         
         .version-badge {
-            background: var(--accent);
-            color: white;
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 4px;
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
             margin-left: 8px;
             font-weight: 600;
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .credit {
             font-size: 0.8rem;
-            color: var(--accent);
-            margin-left: 12px;
-            font-weight: 500;
-            opacity: 0.8;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            opacity: 0.7;
+            margin-left: 8px;
         }
 
-        /* Main Layout */
+        /* Layout */
         .main { display: flex; flex: 1; overflow: hidden; position: relative; }
 
         /* Sidebar */
         .sidebar {
-            width: 320px;
+            width: 300px;
             background: var(--bg-secondary);
             border-right: 1px solid var(--border);
             display: flex;
@@ -97,7 +94,7 @@
 
         .sidebar-tabs {
             display: flex;
-            padding: 0.5rem;
+            padding: 0.75rem;
             gap: 0.5rem;
             border-bottom: 1px solid var(--border);
         }
@@ -115,59 +112,65 @@
             transition: all 0.2s;
         }
 
+        .tab-btn:hover { color: var(--text-primary); background: var(--bg-tertiary); }
+        
         .tab-btn.active {
             background: var(--bg-tertiary);
             color: var(--text-primary);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .sidebar-content {
             flex: 1;
             overflow-y: auto;
             display: none;
+            padding: 0.5rem;
         }
 
         .sidebar-content.active { display: flex; flex-direction: column; }
 
         .section-title {
-            padding: 1rem 1rem 0.5rem;
+            padding: 1rem 0.5rem 0.5rem;
             font-size: 0.75rem;
             text-transform: uppercase;
             color: var(--text-secondary);
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.05em;
         }
 
-        /* Room List Items */
-        .room-item {
-            padding: 0.75rem 1rem;
+        /* List Items */
+        .list-item {
+            padding: 0.75rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            transition: background 0.2s;
-            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            border-radius: 8px;
+            margin-bottom: 2px;
         }
 
-        .room-item:hover { background: var(--bg-tertiary); }
-        .room-item.active { 
-            background: rgba(91, 124, 255, 0.05); 
-            border-left-color: var(--accent);
-        }
+        .list-item:hover { background: var(--bg-tertiary); }
+        .list-item.active { background: rgba(59, 130, 246, 0.1); }
 
-        .room-avatar {
+        .avatar {
             width: 40px;
             height: 40px;
-            border-radius: 12px;
+            border-radius: 10px;
             background: var(--bg-tertiary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
         }
 
-        .room-details { flex: 1; min-width: 0; }
-        .room-name { font-weight: 500; font-size: 0.95rem; margin-bottom: 2px; }
-        .room-last-msg { 
+        .active .avatar { border-color: var(--accent); color: var(--accent); }
+
+        .item-details { flex: 1; min-width: 0; }
+        .item-title { font-weight: 500; font-size: 0.95rem; margin-bottom: 2px; color: var(--text-primary); }
+        .item-subtitle { 
             font-size: 0.8rem; 
             color: var(--text-secondary); 
             white-space: nowrap; 
@@ -175,45 +178,53 @@
             text-overflow: ellipsis; 
         }
         
-        .badge {
-            background: var(--error);
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: auto;
-        }
-
-        /* Join Form */
-        .join-container { padding: 1.5rem; }
-
-        .input-group { margin-bottom: 1rem; }
-        .input-label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-secondary); }
+        /* Forms */
+        .form-container { padding: 1rem; }
+        .input-group { margin-bottom: 1.25rem; }
+        .input-label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; }
         .input-field {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.75rem 1rem;
             background: var(--bg-tertiary);
             border: 1px solid var(--border);
             border-radius: 8px;
-            color: white;
+            color: var(--text-primary);
             outline: none;
             font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
         .input-field:focus { border-color: var(--accent); }
         
+        .primary-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .primary-btn:hover { background: var(--accent-hover); }
+
         /* Chat Area */
         .chat-area { flex: 1; display: flex; flex-direction: column; position: relative; background-size: cover; background-position: center; }
-        .chat-overlay { position: absolute; inset: 0; background: rgba(10,10,10,0.9); pointer-events: none; z-index: 0; }
+        .chat-overlay { position: absolute; inset: 0; background: var(--bg-primary); z-index: 0; }
         
         .chat-interface {
             display: flex;
             flex-direction: column;
             height: 100%;
             z-index: 1;
+            position: relative;
         }
 
         .chat-header {
-            padding: 0.75rem 1.5rem;
+            padding: 0 1.5rem;
+            height: 64px;
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -222,9 +233,10 @@
         }
 
         .room-info { display: flex; flex-direction: column; }
-        .room-code-display { font-family: monospace; color: var(--accent); font-size: 1.1rem; font-weight: 600; }
-        .room-status { font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+        .room-code-display { font-family: 'Inter', monospace; color: var(--text-primary); font-size: 1rem; font-weight: 600; }
+        .room-status { font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+        .status-dot.connected { background: var(--success); }
 
         /* Messages */
         .messages-container {
@@ -233,70 +245,67 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            scroll-behavior: smooth;
+            gap: 0.5rem;
         }
 
         .message-wrapper {
             display: flex;
             gap: 0.75rem;
-            max-width: 75%;
-            animation: slideUp 0.2s ease;
+            max-width: 65%;
+            animation: fadeIn 0.2s ease;
         }
         
         .message-wrapper.mine { align-self: flex-end; flex-direction: row-reverse; }
-        .message-wrapper.system { align-self: center; max-width: 90%; }
+        .message-wrapper.system { align-self: center; max-width: 90%; margin: 1rem 0; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .msg-avatar {
             width: 32px; height: 32px; border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-tertiary);
             display: flex; align-items: center; justify-content: center;
             font-weight: 600; font-size: 0.8rem; flex-shrink: 0;
+            color: var(--text-secondary);
         }
 
         .msg-bubble {
             padding: 0.75rem 1rem;
-            border-radius: 16px;
+            border-radius: 18px;
             background: var(--incoming-msg);
+            color: var(--text-primary);
             position: relative;
             word-wrap: break-word;
             line-height: 1.5;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            font-size: 0.95rem;
         }
 
         .mine .msg-bubble {
             background: var(--outgoing-msg);
+            color: white;
             border-bottom-right-radius: 4px;
         }
         .message-wrapper:not(.mine) .msg-bubble { border-bottom-left-radius: 4px; }
 
-        .msg-sender { font-size: 0.75rem; margin-bottom: 4px; font-weight: 600; opacity: 0.8; }
-        .msg-time { font-size: 0.7rem; margin-top: 4px; opacity: 0.6; text-align: right; }
+        .msg-meta { font-size: 0.7rem; opacity: 0.7; margin-top: 4px; text-align: right; }
 
-        /* Voice Message */
+        /* Voice Message Player */
         .voice-player {
             display: flex; align-items: center; gap: 0.75rem;
-            min-width: 180px;
+            min-width: 160px;
         }
         .play-btn {
-            width: 30px; height: 30px; border-radius: 50%;
+            width: 32px; height: 32px; border-radius: 50%;
             background: rgba(255,255,255,0.2); border: none;
             color: white; cursor: pointer; display: flex;
             align-items: center; justify-content: center;
+            transition: background 0.2s;
         }
         .play-btn:hover { background: rgba(255,255,255,0.3); }
-        .waveform {
-            height: 24px; flex: 1; display: flex;
-            align-items: center; gap: 2px;
-        }
-        .bar { width: 3px; background: rgba(255,255,255,0.5); border-radius: 2px; animation: wave 1.2s infinite paused; }
-        .playing .bar { animation-play-state: running; }
-        @keyframes wave { 0%,100%{height: 4px} 50%{height: 16px} }
-
+        
         /* Input Area */
         .input-area {
-            padding: 1rem 1.5rem;
+            padding: 1.5rem;
             background: var(--bg-secondary);
             border-top: 1px solid var(--border);
         }
@@ -307,23 +316,26 @@
             padding: 0.5rem;
             border-radius: 24px;
             border: 1px solid var(--border);
+            transition: border-color 0.2s;
         }
+        .input-wrapper:focus-within { border-color: var(--border); }
 
         .message-input {
             flex: 1;
             background: transparent;
             border: none;
-            color: white;
-            padding: 0.5rem 0.75rem;
-            max-height: 100px;
+            color: var(--text-primary);
+            padding: 0.6rem 0.75rem;
+            max-height: 120px;
             resize: none;
             outline: none;
             font-family: inherit;
-            line-height: 1.4;
+            line-height: 1.5;
+            font-size: 0.95rem;
         }
 
         .action-btn {
-            width: 36px; height: 36px;
+            width: 38px; height: 38px;
             border-radius: 50%;
             border: none;
             background: transparent;
@@ -334,17 +346,19 @@
             font-size: 1.1rem;
         }
         
-        .action-btn:hover { color: var(--accent); background: rgba(255,255,255,0.05); }
+        .action-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+        .action-btn.active { color: var(--error); background: rgba(239, 68, 68, 0.1); }
+        
         .send-btn { background: var(--accent); color: white; }
-        .send-btn:hover { background: var(--accent-hover); }
+        .send-btn:hover { background: var(--accent-hover); color: white; }
 
         /* Recording UI */
         .recording-ui {
             display: flex; align-items: center; gap: 1rem; flex: 1;
             padding: 0 1rem; color: var(--error); font-weight: 600;
-            animation: pulse 1.5s infinite;
+            font-size: 0.9rem;
         }
-        
+
         /* Modals */
         .modal {
             display: none; position: fixed; inset: 0;
@@ -353,58 +367,66 @@
         }
         .modal.active { display: flex; }
         .modal-box {
-            background: var(--bg-secondary); width: 90%; max-width: 450px;
+            background: var(--bg-secondary); width: 90%; max-width: 420px;
             border-radius: 16px; border: 1px solid var(--border);
             padding: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
-        /* Mobile Styles */
+        .empty-state {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center; padding: 2rem; color: var(--text-secondary);
+        }
+
+        /* Mobile */
         @media (max-width: 768px) {
             .menu-btn { display: block; }
             .sidebar {
-                position: fixed; left: 0; top: 60px; bottom: 0;
+                position: fixed; left: 0; top: 64px; bottom: 0;
                 transform: translateX(-100%);
+                width: 100%;
             }
             .sidebar.open { transform: translateX(0); }
             .message-wrapper { max-width: 85%; }
-            .header { padding: 0.5rem 1rem; }
+            .header { padding: 0 1rem; }
         }
-        
-        .qr-container { text-align: center; padding: 1rem; background: white; border-radius: 8px; margin: 1rem 0; }
-        .qr-img { max-width: 200px; width: 100%; }
     </style>
 </head>
 <body>
-    <header class="header">
+    <div class="header">
         <div class="logo-container">
-            <button class="menu-btn" id="menuBtn">☰</button>
+            <button class="menu-btn" id="menuBtn">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </button>
             <div class="logo">
-                💬 ChatterBox
+                ChatterBox
                 <span class="version-badge">v6</span>
             </div>
-            <div class="credit">by Skye &lt;3</div>
+            <div class="credit">Skye &lt;3</div>
         </div>
         <div style="display: flex; gap: 0.5rem;">
-            <button class="action-btn" id="shareBtn" title="Share Room">🔗</button>
-            <button class="action-btn" id="addonBtn" title="Addons Store">🧩</button>
+            <button class="action-btn" id="shareBtn" title="Share Room">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><path d="M16 6l-4-4-4 4M12 2v13"/></svg>
+            </button>
+            <button class="action-btn" id="addonBtn" title="Addons">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9M14 17H5M12 7v10M8 12h8"/></svg>
+            </button>
         </div>
-    </header>
+    </div>
 
     <div class="main">
+        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-tabs">
-                <button class="tab-btn active" onclick="switchSidebar('chats')">Chats</button>
-                <button class="tab-btn" onclick="switchSidebar('contacts')">Contacts</button>
-                <button class="tab-btn" onclick="switchSidebar('join')">Join +</button>
+                <button class="tab-btn active" onclick="ui.switchTab('chats')">Chats</button>
+                <button class="tab-btn" onclick="ui.switchTab('contacts')">Contacts</button>
+                <button class="tab-btn" onclick="ui.switchTab('join')">New Room</button>
             </div>
 
             <div id="tab-chats" class="sidebar-content active">
-                <div class="section-title">Active Rooms</div>
-                <div id="activeRoomsList">
-                    <div style="padding: 1.5rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">
-                        No active chats.<br>Join a room to start!
-                    </div>
-                </div>
+                <div class="section-title">Active Conversations</div>
+                <div id="activeRoomsList"></div>
             </div>
 
             <div id="tab-contacts" class="sidebar-content">
@@ -413,37 +435,46 @@
             </div>
 
             <div id="tab-join" class="sidebar-content">
-                <div class="join-container">
+                <div class="form-container">
                     <div class="input-group">
-                        <label class="input-label">Your Nickname</label>
-                        <input type="text" id="nicknameInput" class="input-field" placeholder="e.g. Skye">
+                        <label class="input-label">Nickname</label>
+                        <input type="text" id="nicknameInput" class="input-field" placeholder="Your display name">
                     </div>
                     <div class="input-group">
-                        <label class="input-label">Room Code (6 chars)</label>
-                        <input type="text" id="roomCodeInput" class="input-field" placeholder="ABC123" maxlength="6" style="text-transform: uppercase; letter-spacing: 2px;">
+                        <label class="input-label">Room Code</label>
+                        <input type="text" id="roomCodeInput" class="input-field" placeholder="e.g. SKY999" maxlength="6" style="text-transform: uppercase; letter-spacing: 1px;">
                     </div>
-                    <button onclick="handleJoin()" style="width: 100%; padding: 0.8rem; background: var(--accent); border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer;">Join / Create Room</button>
-                    <div id="joinStatus" style="margin-top: 1rem; font-size: 0.85rem; text-align: center;"></div>
+                    <button onclick="app.joinRoom()" class="primary-btn">Connect to Room</button>
+                    <div id="joinStatus" style="margin-top: 1rem; font-size: 0.85rem; text-align: center; color: var(--accent); height: 20px;"></div>
                 </div>
             </div>
         </aside>
 
-        <main class="chat-area" id="chatArea">
-            <div class="chat-overlay"></div> <div id="emptyState" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; z-index: 2;">
-                <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;">✨</div>
-                <h2 style="margin-bottom: 0.5rem;">Welcome to ChatterBox v6</h2>
-                <p style="color: var(--text-secondary);">Select a chat or join a new room to begin.</p>
+        <!-- Chat Area -->
+        <main class="chat-area">
+            <div class="chat-overlay"></div>
+            
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+                <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--border);">💬</div>
+                <h2 style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Select a Conversation</h2>
+                <p>Choose a chat from the sidebar or join a new room to get started.</p>
             </div>
 
+            <!-- Active Chat -->
             <div id="chatInterface" class="chat-interface" style="display: none;">
                 <div class="chat-header">
                     <div class="room-info">
                         <div class="room-code-display">#<span id="currentRoomCode"></span></div>
-                        <div class="room-status"><span class="status-dot"></span> Connected</div>
+                        <div class="room-status"><span id="statusDot" class="status-dot"></span> <span id="statusText">Connecting...</span></div>
                     </div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button class="action-btn" id="voiceCallBtn" title="Voice Call">📞</button>
-                        <button class="action-btn" onclick="leaveCurrentRoom()" title="Leave Room" style="color: var(--error);">✕</button>
+                        <button class="action-btn" id="liveCallBtn" title="Live Call" onclick="app.toggleLiveCall()">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.12 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+                        </button>
+                        <button class="action-btn" onclick="app.leaveRoom()" title="Leave Room" style="color: var(--error);">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                        </button>
                     </div>
                 </div>
 
@@ -451,526 +482,528 @@
 
                 <div class="input-area">
                     <div class="input-wrapper">
-                        <input type="file" id="fileInput" hidden>
-                        <button class="action-btn" onclick="document.getElementById('fileInput').click()">📎</button>
+                        <input type="file" id="fileInput" hidden onchange="app.handleFileUpload(this)">
+                        <button class="action-btn" onclick="document.getElementById('fileInput').click()" title="Attach File">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                        </button>
                         
-                        <textarea id="msgInput" class="message-input" placeholder="iMessage style..." rows="1"></textarea>
+                        <textarea id="msgInput" class="message-input" placeholder="Type a message..." rows="1"></textarea>
                         
+                        <!-- Recording UI -->
                         <div id="recordingUI" class="recording-ui" style="display: none;">
-                            <span>🔴 Recording... <span id="recordTimer">0:00</span></span>
-                            <button class="action-btn" onclick="cancelRecording()" style="margin-left: auto;">✖</button>
+                            <span>recording... <span id="recordTimer">0:00</span></span>
+                            <button class="action-btn" onclick="app.cancelRecording()" style="margin-left: auto;">✕</button>
                         </div>
 
-                        <button class="action-btn" id="micBtn">🎙️</button>
-                        <button class="action-btn send-btn" id="sendBtn">➤</button>
+                        <button class="action-btn" id="micBtn" onclick="app.startRecording()">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+                        </button>
+                        <button class="action-btn send-btn" id="sendBtn" onclick="app.sendMessage()">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <div class="modal" id="addonModal">
-        <div class="modal-box">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3>🧩 Addon Store</h3>
-                <button class="action-btn" onclick="document.getElementById('addonModal').classList.remove('active')">✕</button>
+    <!-- Hidden Audio Elements for Live Calls -->
+    <div id="audioStreamContainer"></div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-box" style="text-align: center;">
+            <h3 style="margin-bottom: 1rem;">Invite to Room</h3>
+            <div style="background: white; padding: 1rem; display: inline-block; border-radius: 8px; margin-bottom: 1rem;">
+                <img id="qrImage" src="" alt="QR" style="width: 180px; height: 180px;">
             </div>
-            <div id="addonList" style="display: flex; flex-direction: column; gap: 0.8rem;"></div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Room Code</p>
+            <div style="background: var(--bg-primary); padding: 0.75rem; border-radius: 8px; font-family: monospace; font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 1.5rem; color: var(--accent);">
+                <span id="shareCodeDisplay"></span>
+            </div>
+            <button class="primary-btn" onclick="ui.closeModals()">Done</button>
         </div>
     </div>
 
-    <div class="modal" id="shareModal">
-        <div class="modal-box" style="text-align: center;">
-            <h3>Invite Friends</h3>
-            <div class="qr-container">
-                <img id="qrImage" class="qr-img" src="" alt="QR Code">
+    <!-- Addon Modal -->
+    <div class="modal" id="addonModal">
+        <div class="modal-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3>Store</h3>
+                <button class="action-btn" onclick="ui.closeModals()">✕</button>
             </div>
-            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Share this code to let others join:</p>
-            <div style="background: var(--bg-tertiary); padding: 0.8rem; border-radius: 8px; font-family: monospace; font-size: 1.2rem; margin-bottom: 1rem;">
-                <span id="shareCodeDisplay"></span>
-            </div>
-            <button class="action-btn" onclick="document.getElementById('shareModal').classList.remove('active')" style="width: 100%; border-radius: 8px;">Close</button>
+            <div id="addonList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
         </div>
     </div>
 
     <script>
-        // --- Core State ---
-        const STATE = {
-            nickname: localStorage.getItem('cb_nick') || '',
+        // Namespace for organization
+        const ui = {
+            els: {
+                input: document.getElementById('msgInput'),
+                msgs: document.getElementById('messagesContainer'),
+                mic: document.getElementById('micBtn'),
+                send: document.getElementById('sendBtn'),
+                recUI: document.getElementById('recordingUI'),
+                timer: document.getElementById('recordTimer'),
+                joinStatus: document.getElementById('joinStatus'),
+                statusDot: document.getElementById('statusDot'),
+                statusText: document.getElementById('statusText'),
+                roomList: document.getElementById('activeRoomsList')
+            },
+            switchTab: (tab) => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.sidebar-content').forEach(c => c.classList.remove('active'));
+                event.target.classList.add('active');
+                document.getElementById(`tab-${tab}`).classList.add('active');
+            },
+            closeModals: () => document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')),
+            toggleMenu: () => document.getElementById('sidebar').classList.toggle('open'),
+            setStatus: (connected) => {
+                ui.els.statusDot.className = connected ? 'status-dot connected' : 'status-dot';
+                ui.els.statusText.textContent = connected ? 'Connected' : 'Connecting...';
+                ui.els.joinStatus.textContent = ''; // clear connecting text from sidebar
+            },
+            scrollToBottom: () => setTimeout(() => ui.els.msgs.scrollTop = ui.els.msgs.scrollHeight, 50)
+        };
+
+        const state = {
+            nick: localStorage.getItem('cb_nick') || '',
             activeRoom: null,
-            rooms: {}, // { code: { peer, conns: [], msgs: [], unread: 0 } }
+            rooms: {}, // { code: { peer, conns: [], msgs: [], isHost: bool, unread: 0 } }
             contacts: JSON.parse(localStorage.getItem('cb_contacts') || '[]'),
-            addons: new Set()
+            addons: new Set(),
+            media: { recorder: null, chunks: [], stream: null, liveStream: null, calls: [] }
         };
 
-        // --- DOM Elements ---
-        const els = {
-            input: document.getElementById('msgInput'),
-            msgs: document.getElementById('messagesContainer'),
-            chatInterface: document.getElementById('chatInterface'),
-            empty: document.getElementById('emptyState'),
-            roomList: document.getElementById('activeRoomsList'),
-            mic: document.getElementById('micBtn'),
-            send: document.getElementById('sendBtn'),
-            recUI: document.getElementById('recordingUI'),
-            timer: document.getElementById('recordTimer')
-        };
+        const app = {
+            init: () => {
+                if (state.nick) document.getElementById('nicknameInput').value = state.nick;
+                app.renderContacts();
+                document.getElementById('menuBtn').onclick = ui.toggleMenu;
+                document.getElementById('shareBtn').onclick = app.showShare;
+                document.getElementById('addonBtn').onclick = app.showAddons;
+                
+                ui.els.input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); app.sendMessage(); }
+                });
+                ui.els.input.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+            },
 
-        // --- Initialization ---
-        if (STATE.nickname) document.getElementById('nicknameInput').value = STATE.nickname;
-        renderContacts();
-        
-        // --- Sidebar Logic ---
-        function switchSidebar(tab) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.sidebar-content').forEach(c => c.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(`tab-${tab}`).classList.add('active');
-        }
+            joinRoom: async () => {
+                const nick = document.getElementById('nicknameInput').value.trim();
+                const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+                
+                if (!nick || code.length !== 6) return alert('Please enter a nickname and 6-character code.');
+                
+                state.nick = nick;
+                localStorage.setItem('cb_nick', nick);
+                ui.els.joinStatus.textContent = 'Establishing secure connection...';
+                
+                if (state.rooms[code]) {
+                    app.switchRoom(code);
+                    ui.els.joinStatus.textContent = '';
+                    return;
+                }
 
-        document.getElementById('menuBtn').onclick = () => {
-            document.getElementById('sidebar').classList.toggle('open');
-        };
+                // Deterministic Host ID logic
+                const hostId = `cb-v6-host-${code}`;
+                
+                // Try to connect as Client first
+                const myId = `cb-v6-user-${Math.random().toString(36).substr(2, 9)}`;
+                const peer = new Peer(myId);
 
-        // --- Room Management ---
-        async function handleJoin() {
-            const nick = document.getElementById('nicknameInput').value.trim();
-            const code = document.getElementById('roomCodeInput').value.trim().toUpperCase();
-            
-            if (!nick || code.length !== 6) return alert('Invalid Name or Code');
-            
-            STATE.nickname = nick;
-            localStorage.setItem('cb_nick', nick);
-            
-            if (STATE.rooms[code]) {
-                switchRoom(code);
-                return;
-            }
+                let connectionTimeout = setTimeout(() => {
+                    // If timeout, assume Host role
+                    peer.destroy();
+                    app.initHost(code, nick, hostId);
+                }, 3000);
 
-            const status = document.getElementById('joinStatus');
-            status.textContent = 'Connecting...';
-            
-            try {
-                await createRoomConnection(code, nick);
-                status.textContent = '';
-                document.getElementById('roomCodeInput').value = '';
-                switchSidebar('chats');
-            } catch (e) {
-                status.textContent = 'Error: ' + e.message;
-            }
-        }
+                peer.on('error', (err) => {
+                    // If error connecting (e.g. peer unavailable), become Host
+                    clearTimeout(connectionTimeout);
+                    peer.destroy();
+                    app.initHost(code, nick, hostId);
+                });
 
-        function createRoomConnection(code, nick) {
-            return new Promise((resolve, reject) => {
-                const peerId = 'chatterbox-v6-' + code + '-' + Math.random().toString(36).substr(2, 5);
-                const peer = new Peer(peerId); // Client/Host hybrid approach
-
-                const roomData = {
-                    peer: peer,
-                    code: code,
-                    conns: [],
-                    msgs: [],
-                    isHost: false // We'll attempt to connect to host first
-                };
-
-                peer.on('open', (id) => {
-                    STATE.rooms[code] = roomData;
-                    
-                    // Try to connect to the "Host" (using v1 convention for simplicity or a known host hash)
-                    // For this V6 P2P mesh, let's use the pure Mesh or Star. 
-                    // Simplification: Try to connect to the "Main Host" ID. If fail, I am host.
-                    const hostId = 'chatterbox-v1-' + code; // Legacy compat or designated host
-                    
-                    const conn = peer.connect(hostId, { metadata: { nickname: nick } });
+                peer.on('open', () => {
+                    // Try connecting to Host
+                    const conn = peer.connect(hostId, { metadata: { nick } });
                     
                     conn.on('open', () => {
-                        setupConnection(conn, code);
-                        roomData.conns.push(conn);
-                        addSystemMsg(code, `Connected to room ${code}`);
-                        resolve();
-                    });
-
-                    conn.on('error', () => {
-                        // If connection to host fails, attempt to BE the host (requires re-init with host ID)
-                        // For this demo, we assume 'chatterbox-v1-' + code is the "Meeting Point"
-                        // If that ID is taken, PeerJS throws 'unavailable-id'.
-                        // This complex logic is simplified here: We just connected as a peer.
-                        // If we wanted to be HOST, we would try new Peer('chatterbox-v1-'+code).
+                        clearTimeout(connectionTimeout);
+                        app.registerRoom(code, peer, false, [conn]);
                         
-                        // Let's try to be the host:
-                        peer.destroy();
-                        const hostPeer = new Peer(hostId);
-                        hostPeer.on('open', () => {
-                            roomData.peer = hostPeer;
-                            roomData.isHost = true;
-                            STATE.rooms[code] = roomData;
-                            addSystemMsg(code, `Room created! You are Host.`);
-                            resolve();
-                        });
-                        hostPeer.on('connection', (c) => {
-                            roomData.conns.push(c);
-                            setupConnection(c, code);
-                            addSystemMsg(code, `${c.metadata.nickname || 'Someone'} joined.`);
-                        });
-                        hostPeer.on('error', (e) => reject(e));
+                        conn.on('data', data => app.handleData(data, code, conn));
+                        conn.on('close', () => app.handleDisconnect(code));
+                        
+                        app.switchRoom(code);
+                        ui.switchTab('chats');
+                        ui.setStatus(true); // Connected!
                     });
                 });
-            });
-        }
+            },
 
-        function setupConnection(conn, code) {
-            conn.on('data', (data) => handleData(data, code, conn));
-            conn.on('close', () => {
-                STATE.rooms[code].conns = STATE.rooms[code].conns.filter(c => c !== conn);
-            });
-        }
-
-        function switchRoom(code) {
-            STATE.activeRoom = code;
-            document.getElementById('currentRoomCode').innerText = code;
-            els.empty.style.display = 'none';
-            els.chatInterface.style.display = 'flex';
-            
-            renderRoomList();
-            renderMessages(code);
-            
-            // Close sidebar on mobile
-            if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
-        }
-
-        function renderRoomList() {
-            els.roomList.innerHTML = Object.keys(STATE.rooms).map(code => {
-                const r = STATE.rooms[code];
-                const active = STATE.activeRoom === code ? 'active' : '';
-                const last = r.msgs.length > 0 ? r.msgs[r.msgs.length-1].text : 'No messages';
-                return `
-                    <div class="room-item ${active}" onclick="switchRoom('${code}')">
-                        <div class="room-avatar">#</div>
-                        <div class="room-details">
-                            <div class="room-name">Room ${code}</div>
-                            <div class="room-last-msg">${last}</div>
-                        </div>
-                        ${r.unread ? `<div class="badge">${r.unread}</div>` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function leaveCurrentRoom() {
-            if (!STATE.activeRoom) return;
-            const code = STATE.activeRoom;
-            STATE.rooms[code].peer.destroy();
-            delete STATE.rooms[code];
-            STATE.activeRoom = null;
-            els.chatInterface.style.display = 'none';
-            els.empty.style.display = 'flex';
-            renderRoomList();
-        }
-
-        // --- Messaging Logic ---
-        function sendMessage() {
-            if (!STATE.activeRoom) return;
-            const text = els.input.value.trim();
-            if (!text) return;
-
-            const msg = { type: 'text', text, sender: STATE.nickname, time: Date.now() };
-            broadcast(STATE.activeRoom, msg);
-            addMsgToState(STATE.activeRoom, msg, true);
-            
-            els.input.value = '';
-            els.input.style.height = 'auto';
-        }
-
-        function handleData(data, code, senderConn) {
-            if (data.type === 'text' || data.type === 'voice') {
-                addMsgToState(code, data, false);
+            initHost: (code, nick, hostId) => {
+                const peer = new Peer(hostId);
                 
-                // If Host, relay to others
-                if (STATE.rooms[code].isHost) {
-                    STATE.rooms[code].conns.forEach(c => {
-                        if (c !== senderConn) c.send(data);
+                peer.on('open', () => {
+                    app.registerRoom(code, peer, true, []);
+                    app.switchRoom(code);
+                    ui.switchTab('chats');
+                    ui.setStatus(true); // Connected (as Host)
+                    
+                    // Listen for calls
+                    peer.on('call', call => app.handleIncomingCall(call));
+                });
+
+                peer.on('connection', (conn) => {
+                    state.rooms[code].conns.push(conn);
+                    
+                    conn.on('data', data => {
+                        // Broadcast to others
+                        state.rooms[code].conns.forEach(c => { if(c !== conn) c.send(data); });
+                        app.handleData(data, code);
                     });
-                }
-            }
-        }
+                    
+                    conn.on('close', () => {
+                        state.rooms[code].conns = state.rooms[code].conns.filter(c => c !== conn);
+                    });
 
-        function broadcast(code, data) {
-            STATE.rooms[code].conns.forEach(c => c.send(data));
-        }
-
-        function addMsgToState(code, msg, isMine) {
-            const room = STATE.rooms[code];
-            room.msgs.push({ ...msg, isMine });
-            
-            if (STATE.activeRoom === code) {
-                renderSingleMessage(msg, isMine);
-            } else {
-                room.unread = (room.unread || 0) + 1;
-                renderRoomList();
-            }
-        }
-
-        function addSystemMsg(code, text) {
-            const msg = { type: 'system', text, time: Date.now() };
-            if (STATE.rooms[code]) STATE.rooms[code].msgs.push(msg);
-            if (STATE.activeRoom === code) renderSingleMessage(msg, false);
-        }
-
-        function renderMessages(code) {
-            els.msgs.innerHTML = '';
-            STATE.rooms[code].msgs.forEach(m => renderSingleMessage(m, m.isMine));
-            setTimeout(() => els.msgs.scrollTop = els.msgs.scrollHeight, 50);
-        }
-
-        function renderSingleMessage(msg, isMine) {
-            const div = document.createElement('div');
-            const time = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            
-            if (msg.type === 'system') {
-                div.className = 'message-wrapper system';
-                div.innerHTML = `<div class="msg-bubble" style="background: rgba(255,255,255,0.1); font-size: 0.8rem; text-align: center;">${msg.text}</div>`;
-            } else {
-                div.className = `message-wrapper ${isMine ? 'mine' : ''}`;
+                    // Send welcome/sync could go here
+                });
                 
-                let content = '';
-                if (msg.type === 'text') {
-                    content = `<div class="msg-bubble">${escapeHtml(msg.text)} <div class="msg-time">${time}</div></div>`;
-                } else if (msg.type === 'voice') {
-                    content = `
-                        <div class="msg-bubble">
-                            <div class="msg-sender">${isMine ? 'Voice Note' : msg.sender}</div>
+                peer.on('error', err => {
+                    ui.els.joinStatus.textContent = 'Error: ' + err.type;
+                });
+            },
+
+            registerRoom: (code, peer, isHost, conns) => {
+                state.rooms[code] = { peer, isHost, conns, msgs: [], unread: 0 };
+                app.addSystemMsg(code, isHost ? 'Room created. You are the Host.' : 'Connected to Room.');
+            },
+
+            switchRoom: (code) => {
+                state.activeRoom = code;
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('chatInterface').style.display = 'flex';
+                document.getElementById('currentRoomCode').textContent = code;
+                document.getElementById('sidebar').classList.remove('open'); // Mobile close
+                
+                // Update connection status in header based on peer state
+                const room = state.rooms[code];
+                ui.setStatus(room && !room.peer.disconnected);
+                
+                app.renderMessages(code);
+                app.renderRoomList();
+            },
+
+            leaveRoom: () => {
+                const code = state.activeRoom;
+                if (!code) return;
+                
+                if (state.rooms[code].peer) state.rooms[code].peer.destroy();
+                delete state.rooms[code];
+                state.activeRoom = null;
+                
+                document.getElementById('chatInterface').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'flex';
+                app.renderRoomList();
+            },
+
+            handleDisconnect: (code) => {
+                if (state.rooms[code]) {
+                    app.addSystemMsg(code, 'Connection lost.');
+                    ui.setStatus(false);
+                }
+            },
+
+            // --- Messaging ---
+            sendMessage: () => {
+                if (!state.activeRoom) return;
+                const text = ui.els.input.value.trim();
+                if (!text) return;
+
+                const msg = { type: 'text', text, sender: state.nick, time: Date.now() };
+                app.broadcast(msg);
+                app.addMsgToState(state.activeRoom, msg, true);
+                
+                ui.els.input.value = '';
+                ui.els.input.style.height = 'auto';
+            },
+
+            handleFileUpload: (input) => {
+                const file = input.files[0];
+                if (!file || !state.activeRoom) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const msg = {
+                        type: 'file',
+                        name: file.name,
+                        size: file.size,
+                        data: e.target.result,
+                        sender: state.nick,
+                        time: Date.now()
+                    };
+                    app.broadcast(msg);
+                    app.addMsgToState(state.activeRoom, msg, true);
+                };
+                reader.readAsDataURL(file);
+                input.value = '';
+            },
+
+            broadcast: (data) => {
+                const room = state.rooms[state.activeRoom];
+                room.conns.forEach(c => c.send(data));
+            },
+
+            handleData: (data, code) => {
+                app.addMsgToState(code, data, false);
+            },
+
+            addMsgToState: (code, msg, isMine) => {
+                const room = state.rooms[code];
+                if (!room) return;
+                room.msgs.push({ ...msg, isMine });
+                
+                if (state.activeRoom === code) {
+                    app.renderSingleMessage(msg, isMine);
+                } else {
+                    room.unread = (room.unread || 0) + 1;
+                    app.renderRoomList();
+                }
+            },
+
+            addSystemMsg: (code, text) => {
+                const msg = { type: 'system', text, time: Date.now() };
+                if (state.rooms[code]) state.rooms[code].msgs.push(msg);
+                if (state.activeRoom === code) app.renderSingleMessage(msg, false);
+            },
+
+            // --- Rendering ---
+            renderRoomList: () => {
+                const list = ui.els.roomList;
+                list.innerHTML = Object.keys(state.rooms).length === 0 
+                    ? '<div style="text-align:center; padding:1rem; color:var(--text-secondary);">No active chats</div>' 
+                    : '';
+
+                Object.keys(state.rooms).forEach(code => {
+                    const room = state.rooms[code];
+                    const active = state.activeRoom === code ? 'active' : '';
+                    const last = room.msgs.length ? (room.msgs[room.msgs.length-1].text || 'Attachment') : 'No messages';
+                    
+                    const el = document.createElement('div');
+                    el.className = `list-item ${active}`;
+                    el.onclick = () => app.switchRoom(code);
+                    el.innerHTML = `
+                        <div class="avatar">#</div>
+                        <div class="item-details">
+                            <div class="item-title">Room ${code}</div>
+                            <div class="item-subtitle">${room.unread ? `<span style="color:var(--accent)">${room.unread} new messages</span>` : last}</div>
+                        </div>
+                    `;
+                    list.appendChild(el);
+                });
+            },
+
+            renderMessages: (code) => {
+                ui.els.msgs.innerHTML = '';
+                state.rooms[code].msgs.forEach(m => app.renderSingleMessage(m, m.isMine));
+                ui.scrollToBottom();
+            },
+
+            renderSingleMessage: (msg, isMine) => {
+                const div = document.createElement('div');
+                const time = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                
+                if (msg.type === 'system') {
+                    div.className = 'message-wrapper system';
+                    div.innerHTML = `<div class="msg-meta">${msg.text}</div>`;
+                } else {
+                    div.className = `message-wrapper ${isMine ? 'mine' : ''}`;
+                    let content = '';
+                    
+                    if (msg.type === 'text') content = msg.text;
+                    else if (msg.type === 'file') content = `📎 <a href="${msg.data}" download="${msg.name}" style="color:inherit">${msg.name}</a> (${(msg.size/1024).toFixed(1)} KB)`;
+                    else if (msg.type === 'voice') {
+                        content = `
                             <div class="voice-player" id="audio-${msg.time}">
-                                <button class="play-btn" onclick="playAudio('${msg.data}', this)">▶</button>
-                                <div class="waveform">
-                                    <div class="bar" style="animation-delay:0s"></div>
-                                    <div class="bar" style="animation-delay:0.2s"></div>
-                                    <div class="bar" style="animation-delay:0.4s"></div>
-                                    <div class="bar" style="animation-delay:0.1s"></div>
-                                    <div class="bar" style="animation-delay:0.3s"></div>
-                                </div>
-                                <div class="msg-time">${time}</div>
+                                <button class="play-btn" onclick="app.playAudio('${msg.data}', this)">▶</button>
+                                <div style="height:2px; background:rgba(255,255,255,0.3); flex:1; border-radius:2px;"></div>
+                                <span style="font-size:0.75rem">${msg.duration || 'Audio'}</span>
                             </div>
+                        `;
+                    }
+
+                    div.innerHTML = `
+                        ${!isMine ? `<div class="msg-avatar">${msg.sender[0].toUpperCase()}</div>` : ''}
+                        <div class="msg-bubble">
+                            ${!isMine ? `<div style="font-size:0.7rem; opacity:0.7; margin-bottom:4px;">${msg.sender}</div>` : ''}
+                            ${content}
+                            <div class="msg-meta">${time}</div>
                         </div>
                     `;
                 }
+                ui.els.msgs.appendChild(div);
+                ui.scrollToBottom();
+            },
 
-                div.innerHTML = `
-                    ${!isMine ? `<div class="msg-avatar">${msg.sender[0].toUpperCase()}</div>` : ''}
-                    ${content}
-                `;
-            }
-            
-            els.msgs.appendChild(div);
-            els.msgs.scrollTop = els.msgs.scrollHeight;
-        }
+            // --- Voice Notes ---
+            startRecording: async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    state.media.stream = stream;
+                    state.media.recorder = new MediaRecorder(stream);
+                    state.media.chunks = [];
+                    
+                    state.media.recorder.ondataavailable = e => state.media.chunks.push(e.data);
+                    state.media.recorder.onstop = app.finishRecording;
+                    state.media.recorder.start();
+                    
+                    ui.els.input.style.display = 'none';
+                    ui.els.send.style.display = 'none';
+                    ui.els.mic.style.display = 'none';
+                    ui.els.recUI.style.display = 'flex';
+                    
+                    // Send button transforms to Stop/Send
+                    const btn = document.createElement('button');
+                    btn.className = 'action-btn';
+                    btn.id = 'stopRecBtn';
+                    btn.innerHTML = '<svg width="20" height="20" fill="currentColor"><rect x="6" y="6" width="8" height="8"/></svg>'; // Stop icon
+                    btn.style.background = 'var(--error)';
+                    btn.style.color = 'white';
+                    btn.onclick = () => state.media.recorder.stop();
+                    ui.els.recUI.appendChild(btn);
+                    
+                } catch (e) { alert('Mic access required'); }
+            },
 
-        // --- Voice Messages ---
-        let mediaRecorder;
-        let audioChunks = [];
-        let startTime;
-        let timerInt;
-
-        els.mic.onclick = async () => {
-            if (!navigator.mediaDevices) return alert('Microphone not supported');
-            
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                
-                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                    const reader = new FileReader();
-                    reader.readAsDataURL(blob);
-                    reader.onloadend = () => {
-                        if (STATE.activeRoom) {
-                            const msg = { 
-                                type: 'voice', 
-                                data: reader.result, 
-                                sender: STATE.nickname, 
-                                time: Date.now() 
-                            };
-                            broadcast(STATE.activeRoom, msg);
-                            addMsgToState(STATE.activeRoom, msg, true);
-                        }
-                    };
-                    stream.getTracks().forEach(t => t.stop());
-                };
-
-                mediaRecorder.start();
-                els.input.style.display = 'none';
-                els.send.style.display = 'none';
-                els.mic.style.display = 'none';
-                els.recUI.style.display = 'flex';
-                
-                startTime = Date.now();
-                timerInt = setInterval(() => {
-                    const diff = Math.floor((Date.now() - startTime) / 1000);
-                    const m = Math.floor(diff / 60);
-                    const s = diff % 60;
-                    els.timer.textContent = `${m}:${s.toString().padStart(2,'0')}`;
-                }, 1000);
-                
-                // Change mic button behavior to "Send"
-                const sendRec = document.createElement('button');
-                sendRec.className = 'action-btn';
-                sendRec.id = 'tempSendRec';
-                sendRec.innerHTML = '⬆';
-                sendRec.style.background = 'var(--success)';
-                sendRec.style.color = 'white';
-                sendRec.onclick = stopRecording;
-                els.recUI.appendChild(sendRec);
-
-            } catch (e) {
-                alert('Mic Access Denied');
-            }
-        };
-
-        function stopRecording() {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-                resetRecUI();
-            }
-        }
-
-        function cancelRecording() {
-            if (mediaRecorder) {
-                mediaRecorder.stop();
-                STATE.activeRoom = null; // Prevent sending logic hack
-                setTimeout(() => STATE.activeRoom = document.getElementById('currentRoomCode').innerText, 100);
-            }
-            resetRecUI();
-        }
-
-        function resetRecUI() {
-            clearInterval(timerInt);
-            els.recUI.style.display = 'none';
-            els.input.style.display = 'block';
-            els.send.style.display = 'flex';
-            els.mic.style.display = 'flex';
-            const temp = document.getElementById('tempSendRec');
-            if(temp) temp.remove();
-        }
-
-        window.playAudio = (dataUrl, btn) => {
-            const audio = new Audio(dataUrl);
-            const container = btn.parentElement;
-            container.classList.add('playing');
-            btn.textContent = '⏸';
-            btn.onclick = () => { audio.pause(); };
-            
-            audio.play();
-            audio.onended = () => {
-                container.classList.remove('playing');
-                btn.textContent = '▶';
-                btn.onclick = () => playAudio(dataUrl, btn);
-            };
-            audio.onpause = audio.onended;
-        };
-
-        // --- Addons (Wallpapers) ---
-        document.getElementById('addonBtn').onclick = () => {
-            const modal = document.getElementById('addonModal');
-            modal.classList.add('active');
-            const list = document.getElementById('addonList');
-            
-            // Mock Store Data
-            const addons = [
-                {
-                    name: "Chat Wallpapers",
-                    desc: "Customize your chat background.",
-                    id: "wallpaper-v1",
-                    installed: STATE.addons.has("wallpaper-v1"),
-                    action: () => {
-                        const url = prompt("Enter Image URL for background:", "https://images.unsplash.com/photo-1554034483-04fda0d3507b?q=80&w=1000");
-                        if (url) {
-                            document.querySelector('.chat-area').style.backgroundImage = `url('${url}')`;
-                            document.querySelector('.chat-overlay').style.background = 'rgba(0,0,0,0.7)'; // lighter overlay
-                        }
+            finishRecording: () => {
+                const blob = new Blob(state.media.chunks, { type: 'audio/webm' });
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => {
+                    if (state.activeRoom && state.media.recorder) { // Check if not cancelled
+                        const msg = { type: 'voice', data: reader.result, sender: state.nick, time: Date.now() };
+                        app.broadcast(msg);
+                        app.addMsgToState(state.activeRoom, msg, true);
                     }
+                    app.resetRecUI();
+                };
+                if(state.media.stream) state.media.stream.getTracks().forEach(t => t.stop());
+            },
+
+            cancelRecording: () => {
+                state.media.recorder = null; // Flag to prevent sending
+                if(state.media.stream) state.media.stream.getTracks().forEach(t => t.stop());
+                app.resetRecUI();
+            },
+
+            resetRecUI: () => {
+                ui.els.recUI.style.display = 'none';
+                ui.els.input.style.display = 'block';
+                ui.els.send.style.display = 'flex';
+                ui.els.mic.style.display = 'flex';
+                const btn = document.getElementById('stopRecBtn');
+                if(btn) btn.remove();
+            },
+
+            playAudio: (url, btn) => {
+                const audio = new Audio(url);
+                btn.innerHTML = '⏸';
+                audio.play();
+                audio.onended = () => btn.innerHTML = '▶';
+                audio.onpause = () => btn.innerHTML = '▶';
+            },
+
+            // --- Live Calls ---
+            toggleLiveCall: async () => {
+                const btn = document.getElementById('liveCallBtn');
+                const room = state.rooms[state.activeRoom];
+                
+                if (state.media.liveStream) {
+                    // End Call
+                    state.media.liveStream.getTracks().forEach(t => t.stop());
+                    state.media.liveStream = null;
+                    btn.classList.remove('active');
+                    app.addSystemMsg(state.activeRoom, '📞 Call ended');
+                } else {
+                    // Start Call
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        state.media.liveStream = stream;
+                        btn.classList.add('active');
+                        app.addSystemMsg(state.activeRoom, '📞 Started a call');
+                        
+                        // Call everyone in the room
+                        room.conns.forEach(conn => {
+                            const call = room.peer.call(conn.peer, stream);
+                            state.media.calls.push(call);
+                        });
+                    } catch (e) { alert('Mic error'); }
                 }
-            ];
+            },
 
-            list.innerHTML = addons.map(a => `
-                <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div style="font-weight: 600;">${a.name}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">${a.desc}</div>
+            handleIncomingCall: (call) => {
+                // Answer automatically (or could prompt user)
+                call.answer(state.media.liveStream || undefined);
+                call.on('stream', remoteStream => {
+                    const audio = document.createElement('audio');
+                    audio.srcObject = remoteStream;
+                    audio.autoplay = true;
+                    document.getElementById('audioStreamContainer').appendChild(audio);
+                });
+            },
+
+            // --- Addons/Contacts/Share ---
+            showAddons: () => {
+                document.getElementById('addonModal').classList.add('active');
+                const list = document.getElementById('addonList');
+                list.innerHTML = `
+                    <div style="background:var(--bg-tertiary); padding:1rem; border-radius:8px; display:flex; align-items:center; justify-content:space-between;">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-primary)">Custom Backgrounds</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary)">Set a custom image URL</div>
+                        </div>
+                        <button class="primary-btn" style="width:auto; padding:0.5rem 1rem; font-size:0.8rem;" onclick="app.installWallpaper()">Install</button>
                     </div>
-                    <button class="action-btn" style="width: auto; padding: 0 1rem; border-radius: 4px; font-size: 0.8rem; background: ${a.installed ? 'var(--success)' : 'var(--accent)'}; color: white;"
-                    onclick="${a.installed ? '' : 'installAddon(\''+a.id+'\')'}">
-                        ${a.installed ? 'Installed' : 'Install'}
-                    </button>
-                </div>
-            `).join('');
-        };
+                `;
+            },
 
-        window.installAddon = (id) => {
-            STATE.addons.add(id);
-            alert('Addon Installed! Click Addons again to configure.');
-            document.getElementById('addonModal').classList.remove('active');
-            // Trigger configuration immediately for demo
-            if(id === 'wallpaper-v1') {
-                const url = prompt("Wallpaper Installed! Enter Image URL:", "https://images.unsplash.com/photo-1519681393784-d120267933ba");
+            installWallpaper: () => {
+                const url = prompt('Enter Image URL:');
                 if (url) {
                     document.querySelector('.chat-area').style.backgroundImage = `url('${url}')`;
-                    document.querySelector('.chat-overlay').style.background = 'rgba(0,0,0,0.7)';
+                    document.querySelector('.chat-overlay').style.opacity = '0.85';
+                    ui.closeModals();
                 }
-            }
-        };
+            },
 
-        // --- Sharing & Contacts ---
-        document.getElementById('shareBtn').onclick = () => {
-            if (!STATE.activeRoom) return alert('Join a room first!');
-            const modal = document.getElementById('shareModal');
-            const code = STATE.activeRoom;
-            document.getElementById('shareCodeDisplay').textContent = code;
-            document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://chatterbox.app/?join=${code}`;
-            modal.classList.add('active');
-        };
+            showShare: () => {
+                if(!state.activeRoom) return;
+                document.getElementById('shareCodeDisplay').textContent = state.activeRoom;
+                document.getElementById('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${state.activeRoom}`;
+                document.getElementById('shareModal').classList.add('active');
+            },
 
-        function renderContacts() {
-            const list = document.getElementById('contactsList');
-            if (!STATE.contacts.length) {
-                list.innerHTML = '<div style="padding:1rem; text-align:center; opacity:0.5">No contacts saved</div>';
-                return;
-            }
-            list.innerHTML = STATE.contacts.map(c => `
-                <div class="room-item" onclick="quickJoin('${c.code}')">
-                    <div class="room-avatar" style="background: var(--accent); color: white;">${c.name[0]}</div>
-                    <div class="room-details">
-                        <div class="room-name">${c.name}</div>
-                        <div class="room-last-msg">Code: ${c.code}</div>
+            renderContacts: () => {
+                const list = document.getElementById('contactsList');
+                if (!state.contacts.length) { list.innerHTML = '<div style="text-align:center; padding:1rem; opacity:0.5">No contacts</div>'; return; }
+                list.innerHTML = state.contacts.map(c => `
+                    <div class="list-item" onclick="document.getElementById('roomCodeInput').value='${c.code}'; ui.switchTab('join')">
+                        <div class="avatar">${c.name[0]}</div>
+                        <div class="item-details"><div class="item-title">${c.name}</div></div>
                     </div>
-                </div>
-            `).join('');
-        }
-        
-        window.quickJoin = (code) => {
-            document.getElementById('roomCodeInput').value = code;
-            switchSidebar('join');
+                `).join('');
+            }
         };
 
-        // Utility
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        // Auto-resize textarea
-        els.input.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        });
-        
-        els.input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
+        // Initial Start
+        app.init();
     </script>
 </body>
 </html>
